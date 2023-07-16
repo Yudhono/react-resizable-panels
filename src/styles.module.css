@@ -5,20 +5,29 @@
   flex-direction: column;
   gap: 1rem;
 }
+
 .TopRow {
   flex: 0 0 auto;
   text-align: center;
 }
+
 .BottomRow {
   flex: 1 1 auto;
 }
 
-.Panel {
+.PanelContent {
+  height: 100%;
+  width: 100%;
+  background-color: var(--color-panel-background);
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  border-radius: 0.5rem;
 }
 
-.PanelContent {
+.PanelContentMiddle {
   height: 100%;
   width: 100%;
   background-color: var(--color-panel-background);
@@ -34,9 +43,9 @@
   flex: 0 0 1.5em;
   position: relative;
   outline: none;
-
   --background-color: transparent;
 }
+
 .ResizeHandleOuter[data-resize-handle-active] {
   --background-color: var(--color-solid-resize-bar-handle);
 }
@@ -60,6 +69,7 @@
   padding: 0.25rem 0.5rem;
   cursor: pointer;
 }
+
 .Button:hover {
   background-color: var(--color-button-background-hover);
 }
@@ -77,4 +87,70 @@
   left: calc(50% - 0.5rem);
   top: calc(50% - 0.5rem);
   rotate: 90deg;
+}
+
+@keyframes slideIn {
+  from {
+    transform: translateX(100%);
+  }
+  to {
+    transform: translateX(0);
+  }
+}
+
+@keyframes slideOut {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(100%);
+  }
+}
+
+.Panel {
+  display: flex;
+  flex-direction: column;
+  animation-duration: 0.3s;
+  animation-timing-function: ease-in-out;
+  animation-fill-mode: forwards;
+  transform: translateX(0);
+  transition: transform 0.3s ease-in-out;
+}
+
+.PanelMiddle {
+  display: flex;
+  flex-direction: column;
+  transition: flex 0.3s ease-in-out; /* Transition the flex property */
+  overflow: hidden;
+}
+
+.PanelMiddleExpand {
+  display: flex;
+  flex-direction: column;
+  flex: 1; /* Expand to full width */
+  transition: flex 0.3s ease-in-out; /* Transition the flex property */
+}
+
+.PanelContentMiddle {
+  height: 100%;
+  width: 100%;
+  background-color: var(--color-panel-background);
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  border-radius: 0.5rem;
+}
+
+.Hidden {
+  display: none;
+}
+
+.Panel.Hide {
+  animation-name: slideOut;
+}
+
+.Panel.Show {
+  animation-name: slideIn;
 }
