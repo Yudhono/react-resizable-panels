@@ -1,70 +1,54 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Panel, PanelGroup } from "react-resizable-panels";
 
 import ResizeHandle from "./ResizeHandle";
 import styles from "./styles.module.css";
 
 export default function App() {
-  const [showFirstPanel, setShowFirstPanel] = useState(true);
   const [showLastPanel, setShowLastPanel] = useState(true);
+  const [isAnimating, setIsAnimating] = useState(false);
+
+  useEffect(() => {
+    setIsAnimating(true);
+    const timer = setTimeout(() => {
+      setIsAnimating(false);
+    }, 300);
+    return () => clearTimeout(timer);
+  }, [showLastPanel]);
+
+  const panelClass = showLastPanel
+    ? `${styles.Panel} ${isAnimating ? styles.Show : ""}`
+    : `${styles.Panel} ${isAnimating ? styles.Hide : styles.Hidden}`;
 
   return (
     <div className={styles.Container}>
       <div className={styles.TopRow}>
-        <a
-          className={styles.Link}
-          href="https://github.com/bvaughn/react-resizable-panels"
-        >
-          github.com/bvaughn/react-resizable-panels
-        </a>
-
         <p>
-          <button
-            className={styles.Button}
-            onClick={() => setShowFirstPanel(!showFirstPanel)}
-          >
-            {showFirstPanel ? "hide" : "show"} left panel
-          </button>
-          &nbsp;
           <button
             className={styles.Button}
             onClick={() => setShowLastPanel(!showLastPanel)}
           >
-            {showLastPanel ? "hide" : "show"} right panel
+            {showLastPanel ? "Hide" : "Show"} right panel
           </button>
         </p>
       </div>
       <div className={styles.BottomRow}>
         <PanelGroup autoSaveId="example" direction="horizontal">
-          {showFirstPanel && (
-            <>
-              <Panel
-                className={styles.Panel}
-                collapsible={true}
-                defaultSize={20}
-                order={1}
-              >
-                <div className={styles.PanelContent}>left</div>
-              </Panel>
-              <ResizeHandle />
-            </>
-          )}
           <Panel className={styles.Panel} collapsible={true} order={2}>
             <div className={styles.PanelContent}>middle</div>
           </Panel>
-          {showLastPanel && (
-            <>
-              <ResizeHandle />
-              <Panel
-                className={styles.Panel}
-                collapsible={true}
-                defaultSize={20}
-                order={3}
-              >
-                <div className={styles.PanelContent}>right</div>
-              </Panel>
-            </>
-          )}
+
+          <>
+            <ResizeHandle />
+            <Panel
+              className={panelClass}
+              collapsible={true}
+              defaultSize={20}
+              order={3}
+            >
+              <div className={styles.PanelContent}>right</div>
+            </Panel>
+          </>
         </PanelGroup>
       </div>
     </div>
